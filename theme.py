@@ -31,8 +31,10 @@ def adjust_theme():
     try:
         color_er = gr.themes.utils.colors.fuchsia
         set_theme = gr.themes.Default(
-            primary_hue=gr.themes.utils.colors.orange,
-            neutral_hue=gr.themes.utils.colors.gray,
+            # primary_hue=gr.themes.utils.colors.orange,
+            primary_hue=gr.themes.utils.colors.violet,
+            # neutral_hue=gr.themes.utils.colors.gray,
+            neutral_hue=gr.themes.utils.colors.zinc,
             font=["sans-serif", "Microsoft YaHei", "ui-sans-serif", "system-ui",
                   "sans-serif", gr.themes.utils.fonts.GoogleFont("Source Sans Pro")],
             font_mono=["ui-monospace", "Consolas", "monospace", gr.themes.utils.fonts.GoogleFont("IBM Plex Mono")])
