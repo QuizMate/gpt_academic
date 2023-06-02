@@ -82,12 +82,12 @@ your bing cookies here
 SLACK_CLAUDE_BOT_ID = ''   
 SLACK_CLAUDE_USER_TOKEN = ''
 
-ZEROGPT_API_KEY='4c36e744-9829-4446-816f-f5b101a27986'
-ZEROGPT_EMAIL='lijia.tong@oneclass.com'
-ZEROGPT_PASSWORD='tonglijia.'
+ZEROGPT_API_KEY=''
+ZEROGPT_EMAIL=''
+ZEROGPT_PASSWORD=''
 
-WORD_EMAIL='lijia.tong@oneclass.com'
-WORD_APKEY="679e639335779555052afb73a9e65991"
-WORD_PASSWORD='tonglijia.'
+WORD_EMAIL=''
+WORD_APKEY=""
+WORD_PASSWORD=''
 WORD_AVOID_API_URL='https://wai.wordai.com/api/avoid'
 WORD_WEWRITE_API_URL='https://wai.wordai.com/api/rewrite'
