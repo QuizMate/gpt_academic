@@ -29,6 +29,7 @@ def get_crazy_functions():
     function_plugins = {
         "解析整个Python项目": {
             "Color": "stop",    # 按钮颜色
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个Python项目)
         },
         "载入对话历史存档（先上传存档或输入路径）": {
@@ -58,37 +59,37 @@ def get_crazy_functions():
         },
         "解析整个C++项目（.cpp/.hpp/.c/.h）": {
             "Color": "stop",    # 按钮颜色
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个C项目)
         },
         "解析整个Go项目": {
             "Color": "stop",    # 按钮颜色
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个Golang项目)
         },
         "解析整个Rust项目": {
             "Color": "stop",    # 按钮颜色
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个Rust项目)
         },
         "解析整个Java项目": {
             "Color": "stop",  # 按钮颜色
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个Java项目)
         },
         "解析整个前端项目（js,ts,css等）": {
             "Color": "stop",  # 按钮颜色
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个前端项目)
         },
         "解析整个Lua项目": {
             "Color": "stop",    # 按钮颜色
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个Lua项目)
         },
         "解析整个CSharp项目": {
             "Color": "stop",    # 按钮颜色
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析一个CSharp项目)
         },
         "读Tex论文写摘要": {
@@ -106,18 +107,20 @@ def get_crazy_functions():
             "Function": HotReload(批量生成函数注释)
         },
         "保存当前的对话": {
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(对话历史存档)
         },
         "[多线程Demo] 解析此项目本身（源码自译解）": {
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(解析项目本身)
         },
         "[老旧的Demo] 把本项目源代码切换成全英文": {
             # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
-            "AsButton": False,  # 加入下拉菜单中
+            "AsButton": False,  # 不加入下拉菜单中
             "Function": HotReload(全项目切换英文)
         },
         "[插件demo] 历史上的今天": {
+            "AsButton": False,  # 不加入下拉菜单中
             # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
             "Function": HotReload(高阶功能模板函数)
         },

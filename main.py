@@ -1,14 +1,11 @@
 import os; os.environ['no_proxy'] = '*' # 避免代理网络产生意外污染
 
 
-def combine(a,b):
-    return a+b
-
 def main():
     import gradio as gr
     if gr.__version__ not in ['3.28.3','3.32.2']: assert False, "请用 pip install -r requirements.txt 安装依赖"
     from request_llm.bridge_all import predict
-    from toolbox import format_io, find_free_port, on_file_uploaded, on_report_generated, get_conf, ArgsGeneralWrapper, DummyWith
+    from toolbox import format_io, find_free_port, ai_rewrite, query_ai, void_ai, on_file_uploaded, on_report_generated, get_conf, ArgsGeneralWrapper, DummyWith
     # 建议您复制一个config_private.py放自己的秘密, 如API和代理网址, 避免不小心传github被别人看到
     proxies, WEB_PORT, LLM_MODEL, CONCURRENT_COUNT, AUTHENTICATION, CHATBOT_HEIGHT, LAYOUT, API_KEY, AVAIL_LLM_MODELS = \
         get_conf('proxies', 'WEB_PORT', 'LLM_MODEL', 'CONCURRENT_COUNT', 'AUTHENTICATION', 'CHATBOT_HEIGHT', 'LAYOUT', 'API_KEY', 'AVAIL_LLM_MODELS')
@@ -67,9 +64,16 @@ def main():
                         if ("Visible" in functional[k]) and (not functional[k]["Visible"]): continue
                         variant = functional[k]["Color"] if "Color" in functional[k] else "secondary"
                         functional[k]["Button"] = gr.Button(k, variant=variant)
-                    btnVoidAi = gr.Button(value="降AI", elem_classes="btn btn-danger")
                     btnQueryAI = gr.Button(value="查AI")
-                    btnReWrite = gr.Button(value="降AI/降重")
+                    btnVoidAi = gr.Button(value="降AI", elem_classes="btn btn-danger")
+                    btnReWriteAi = gr.Button(value="论文润色", elem_classes="btn btn-danger")
+        with gr.Accordion("函数插件区", open=True, visible=True) as area_crazy_fn:
+            with gr.Row():
+                for k in crazy_fns:
+                    if not crazy_fns[k].get("AsButton", True): continue
+                    variant = crazy_fns[k]["Color"] if "Color" in crazy_fns[k] else "secondary"
+                    crazy_fns[k]["Button"] = gr.Button(k, variant=variant)
+                    crazy_fns[k]["Button"].style(size="sm")
         with gr_L1():
             with gr_L2(scale=2):
                 chatbot = gr.Chatbot(label=f"当前模型：{LLM_MODEL}")
@@ -156,13 +160,15 @@ def main():
         resetBtn2.click(lambda: ([], [], "已重置"), None, [chatbot, history])
         clearBtn.click(lambda: ("",""), None, [txt, txt2])
         clearBtn2.click(lambda: ("",""), None, [txt, txt2])
+        btnQueryAI.click(fn=query_ai, inputs=[cookies, txt, chatbot, history], outputs=output_combo)
+        btnVoidAi.click(fn=void_ai, inputs=[cookies, txt, chatbot, history], outputs=output_combo)
+        btnReWriteAi.click(fn=ai_rewrite, inputs=[cookies, txt, chatbot, history], outputs=output_combo)
         # 基础功能区的回调函数注册
         for k in functional:
             if ("Visible" in functional[k]) and (not functional[k]["Visible"]): continue
             click_handle = functional[k]["Button"].click(fn=ArgsGeneralWrapper(predict), inputs=[*input_combo, gr.State(True), gr.State(k)], outputs=output_combo)
             cancel_handles.append(click_handle)
 
-        btnVoidAi.click(combine, inputs=[*input_combo, gr.State(True)], outputs=output_combo)
         # 文件上传区，接收文件后与chatbot的互动
         file_upload.upload(on_file_uploaded, [file_upload, chatbot, txt, txt2, checkboxes], [chatbot, txt, txt2])
         # 函数插件-固定按钮区
@@ -206,6 +212,7 @@ def main():
             DARK_MODE, = get_conf('DARK_MODE')
             if DARK_MODE: webbrowser.open_new_tab(f"http://localhost:{PORT}/?__theme=dark")
             else: webbrowser.open_new_tab(f"http://localhost:{PORT}")
+        print(webbrowser.get_cookies, "asdfasdf")
         threading.Thread(target=open, name="open-browser", daemon=True).start()
         threading.Thread(target=auto_update, name="self-upgrade", daemon=True).start()
         threading.Thread(target=warm_up_modules, name="warm-up", daemon=True).start()

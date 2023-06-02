@@ -4,6 +4,7 @@ import traceback
 import inspect
 import re
 import os
+from config import *
 from latex2mathml.converter import convert as tex2mathml
 from functools import wraps, lru_cache
 
@@ -419,6 +420,95 @@ def find_recent_files(directory):
             recent_files.append(file_path)
 
     return recent_files
+
+def get_human_assessment(score):
+    cases = {
+        100: '您的论文很可能完全是人工写的',
+        87.5: '您的论文很可能是人工写的',
+        75: "您的论文很可能是人工写的，但是有些内容有AI/GPT的嫌疑",
+        62.5: "您的论文可能是人工写的，但是有些内容有AI/GPT的嫌疑",
+        50: "您的论文可能是AI/GPT+人工写的，有部分内容由AI/GPT生成",
+        37.5: "您的论文像是AI/GPT生成的",
+        25: "您的论文很像是AI/GPT生成的",
+        12.5: "您的论文的大部分是AI/GPT生成的",
+        0: "您的论文的是AI/GPT生成的",
+    }
+    return cases.get(score, '分数无效')
+
+def highlight_text(origin_text, h):
+    h_with_tags = [f'<span style="color: #f4d338">{text}</span>' for text in h]
+    replacement_dict = dict(zip(h, h_with_tags))
+    for original, replacement in replacement_dict.items():
+        origin_text = re.sub(re.escape(original), replacement, origin_text)
+
+    return origin_text
+
+def query_ai(cookies, txt, chatbot, history):
+    """
+     调用第三方API，实现AI对话功能。
+    """
+    import requests
+    login_url = 'https://api.zerogpt.com/api/auth/login'
+    data = { 'email': ZEROGPT_EMAIL, 'password': ZEROGPT_PASSWORD }
+    headers = { 'Content-Type': 'application/json' }
+    response = requests.post(login_url, json=data, headers=headers)
+    json_response = response.json()
+    if json_response['success']:
+        token = json_response['data']['token']
+        headers['Authorization'] = 'Bearer ' + token
+        headers['ApiKey'] = ZEROGPT_API_KEY
+        input_data = { 'input_text': txt }
+        url = 'https://api.zerogpt.com/api/detect/detectText'
+        res = requests.post(url, json=input_data, headers=headers)
+        response_json = res.json()
+        if response_json['success']:
+            is_human = response_json['data']['isHuman']
+            h = response_json['data']['h']
+            is_human_prompt = get_human_assessment(is_human)
+            messages = []
+            if h:
+                messages.append(is_human_prompt)
+                messages.append(highlight_text(txt, h))
+            else:
+                messages.append(txt)
+                messages.append(is_human_prompt)
+            chatbot.append(messages)
+    print(cookies)
+    return([cookies, chatbot, history])
+
+def void_ai(cookies, txt, chatbot, history):
+    """
+        调用第三方API，实现AI对话功能。
+    """
+    import requests
+    data = { 'email': WORD_EMAIL, 'key': WORD_APKEY, 'input': txt }
+    headers = { 'Content-Type': 'application/json' }
+    response = requests.post(WORD_AVOID_API_URL, json=data, headers=headers)
+    json_response = response.json()
+    if json_response['status'] == 'Success':
+        messages = [txt]
+        messages.append('降AI后的内容 \n\n'+json_response['text'])
+        chatbot.append(messages)
+    print(json_response)
+
+    return([cookies, chatbot, history])
+
+
+def ai_rewrite(cookies, txt, chatbot, history):
+    """
+        调用第三方API，实现AI对话功能。
+    """
+    import requests
+    data = { 'email': WORD_EMAIL, 'key': WORD_APKEY, 'input': txt, 'uniqueness': 2, 'rewrite_num': 1 }
+    headers = { 'Content-Type': 'application/json' }
+    response = requests.post(WORD_WEWRITE_API_URL, json=data, headers=headers)
+    json_response = response.json()
+    if json_response['status'] == 'Success':
+        messages = [txt]
+        messages.append('润色后的内容 \n\n'+json_response['text'])
+        chatbot.append(messages)
+    print(json_response)
+    return([cookies, chatbot, history])
 
 
 def on_file_uploaded(files, chatbot, txt, txt2, checkboxes):

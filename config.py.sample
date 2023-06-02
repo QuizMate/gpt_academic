@@ -1,5 +1,5 @@
 # [step 1]>> 例如： API_KEY = "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" （此key无效）
-API_KEY = "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"    # 可同时填写多个API-KEY，用英文逗号分割，例如API_KEY = "sk-openaikey1,sk-openaikey2,fkxxxx-api2dkey1,fkxxxx-api2dkey2"
+API_KEY = "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"    # 可同时填写多个API-KEY，用英文逗号分割，例如API_KEY = "sk-openaikey1,sk-openaikey2,fkxxxx-api2dkey1,fkxxxx-api2dkey2"
 
 # [step 2]>> 改为True应用代理，如果直接在海外服务器部署，此处不修改
 USE_PROXY = False
@@ -81,3 +81,13 @@ your bing cookies here
 # 如果需要使用Slack Claude，使用教程详情见 request_llm/README.md
 SLACK_CLAUDE_BOT_ID = ''   
 SLACK_CLAUDE_USER_TOKEN = ''
+
+ZEROGPT_API_KEY='4c36e744-9829-4446-816f-f5b101a27986'
+ZEROGPT_EMAIL='lijia.tong@oneclass.com'
+ZEROGPT_PASSWORD='tonglijia.'
+
+WORD_EMAIL='lijia.tong@oneclass.com'
+WORD_APKEY="679e639335779555052afb73a9e65991"
+WORD_PASSWORD='tonglijia.'
+WORD_AVOID_API_URL='https://wai.wordai.com/api/avoid'
+WORD_WEWRITE_API_URL='https://wai.wordai.com/api/rewrite'

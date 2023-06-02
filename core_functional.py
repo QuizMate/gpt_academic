@@ -30,7 +30,7 @@ def get_core_functions():
                         r"Example:""\n"
                         r"Paragraph: How is you? Do you knows what is it?""\n"
                         r"| Original sentence | Corrected sentence |""\n"
-                        r"| :--- | :--- |""\n"
+                        r"|--------|--------|""\n"
                         r"| How **is** you? | How **are** you? |""\n"
                         r"| Do you **knows** what **is** **it**? | Do you **know** what **it** **is** ? |""\n"
                         r"Below is a paragraph from an academic paper. "
@@ -56,10 +56,6 @@ def get_core_functions():
             "Color": "secondary",
         },
         "英译中": {
-            "Prefix":   r"翻译成地道的中文：" + "\n\n",
-            "Suffix":   r"",
-        },
-        "总结": {
             "Prefix":   r"翻译成地道的中文：" + "\n\n",
             "Suffix":   r"",
         }
