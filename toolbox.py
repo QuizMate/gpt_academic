@@ -443,10 +443,11 @@ def highlight_text(origin_text, h):
 
     return origin_text
 
-def query_ai(cookies, txt, chatbot, history):
+def query_ai(cookies, txt, txt2, chatbot, history):
     """
      调用第三方API，实现AI对话功能。
     """
+    if txt == "" and txt2 != "": txt = txt2
     import requests
     login_url = 'https://api.zerogpt.com/api/auth/login'
     data = { 'email': ZEROGPT_EMAIL, 'password': ZEROGPT_PASSWORD }
@@ -476,10 +477,11 @@ def query_ai(cookies, txt, chatbot, history):
     print(cookies)
     return([cookies, chatbot, history])
 
-def void_ai(cookies, txt, chatbot, history):
+def void_ai(cookies, txt, txt2, chatbot, history):
     """
         调用第三方API，实现AI对话功能。
     """
+    if txt == "" and txt2 != "": txt = txt2
     import requests
     data = { 'email': WORD_EMAIL, 'key': WORD_APKEY, 'input': txt }
     headers = { 'Content-Type': 'application/json' }
@@ -494,18 +496,19 @@ def void_ai(cookies, txt, chatbot, history):
     return([cookies, chatbot, history])
 
 
-def ai_rewrite(cookies, txt, chatbot, history):
+def ai_rewrite(cookies, txt,txt2, chatbot, history):
     """
         调用第三方API，实现AI对话功能。
     """
+    if txt == "" and txt2 != "": txt = txt2
     import requests
-    data = { 'email': WORD_EMAIL, 'key': WORD_APKEY, 'input': txt, 'uniqueness': 2, 'rewrite_num': 1 }
+    data = { 'email': WORD_EMAIL, 'key': WORD_APKEY, 'input': txt, 'return_rewrites': True, 'uniqueness': 2, 'rewrite_num': 1 }
     headers = { 'Content-Type': 'application/json' }
     response = requests.post(WORD_WEWRITE_API_URL, json=data, headers=headers)
     json_response = response.json()
     if json_response['status'] == 'Success':
         messages = [txt]
-        messages.append('润色后的内容 \n\n'+json_response['text'])
+        messages.append('润色后的内容 \n\n'+json_response['rewrites'][0])
         chatbot.append(messages)
     print(json_response)
     return([cookies, chatbot, history])

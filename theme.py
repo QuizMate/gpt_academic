@@ -105,6 +105,16 @@ def adjust_theme():
 
 
 advanced_css = """
+
+.btn-disabled {
+    background-color: var(--background-color-secondary);
+    disbabled: true;
+}
+
+
+footer {
+    visibility: hidden;
+}
 .markdown-body table {
     margin: 1em 0;
     border-collapse: collapse;
