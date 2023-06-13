@@ -10,7 +10,7 @@ cd "$script_dir" || exit
 git remote update
 pwd
 
-
+aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 406687643298.dkr.ecr.ap-northeast-2.amazonaws.com
 AWS_URl="406687643298.dkr.ecr.ap-northeast-2.amazonaws.com/quizmate-academic"
 RELATEST_TIME=$(date '+%Y%m%d%H%M%S')
 IMAGE_NAME=quizmate-academic:$RELATEST_TIME
@@ -22,5 +22,8 @@ echo "${REMOTE_URL}"
 docker tag $IMAGE_NAME $REMOTE_URL
 docker push $REMOTE_URL
 
+export IMAGETAG=$REMOTE_URL
+docker-compose down
+docker-compose up -d
 
 

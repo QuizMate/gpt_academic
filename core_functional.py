@@ -54,25 +54,41 @@ def get_core_functions():
                         r"I'll give you my paragraphs as follows, tell me what language it is written in, and then translate:" + "\n\n",
             "Suffix": "",
             "Color": "secondary",
-        }
-        # "英译中": {
-        #     "Prefix":   r"翻译成地道的中文：" + "\n\n",
-        #     "Suffix":   r"",
-        # }
-        # "找图片": {
-        #     "Prefix":   r"我需要你找一张网络图片。使用Unsplash API(https://source.unsplash.com/960x640/?<英语关键词>)获取图片URL，" +
-        #                 r"然后请使用Markdown格式封装，并且不要有反斜线，不要用代码块。现在，请按以下描述给我发送图片：" + "\n\n",
-        #     "Suffix":   r"",
-        # },
-        # "解释代码": {
-        #     "Prefix":   r"请解释以下代码：" + "\n```\n",
-        #     "Suffix":   "\n```\n",
-        # },
-        # "参考文献转Bib": {
-        #     "Prefix":   r"Here are some bibliography items, please transform them into bibtex style." +
-        #                 r"Note that, reference styles maybe more than one kind, you should transform each item correctly." +
-        #                 r"Items need to be transformed:",
-        #     "Suffix":   r"",
-        #     "Visible": False,
-        # }
+        },
+        "引用扩写": {
+            "Prefix": r"请根据文章的引用进行扩写:" + "\n\n",
+            "Suffix": "",
+            "Expand": True,
+            "Color": "secondary",
+        },
+        "摘要扩写": {
+            "Prefix":  r"请根据文章的摘要进行扩写:" + "\n\n",
+            "Suffix": "",
+            "Expand": True,
+            "Color": "secondary",
+        },
+        "内容扩写": {
+            "Prefix":   r"请针对文章内容扩写:" + "\n\n",
+            "Suffix": "",
+            "Expand": True,
+            "Color": "secondary",
+        },
+        "大纲扩写": {
+            "Prefix":   r"请针对文章大纲扩写:" + "\n\n",
+            "Suffix": "",
+            "Expand": True,
+            "Color": "secondary",
+        },
+        "加入案例": {
+            "Prefix":   r"请在文章中加入通俗易懂生动的案例:" + "\n\n",
+            "Suffix": "",
+            "Polishing": True,
+            "Color": "secondary",
+        },
+        "加入文献": {
+            "Prefix":   r"请在文章中引入文献，要求在谷歌学术超过一千字的文献:" + "\n\n",
+            "Suffix": "",
+            "Polishing": True,
+            "Color": "secondary",
+        },
     }

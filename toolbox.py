@@ -195,9 +195,6 @@ def regular_txt_to_markdown(text):
     text = text.replace('\n\n\n', '\n\n')
     return text
 
-
-
-
 def report_execption(chatbot, history, a, b):
     """
     向chatbot中添加错误信息

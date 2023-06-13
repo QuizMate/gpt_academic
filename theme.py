@@ -32,7 +32,7 @@ def adjust_theme():
         color_er = gr.themes.utils.colors.fuchsia
         set_theme = gr.themes.Default(
             # primary_hue=gr.themes.utils.colors.orange,
-            primary_hue=gr.themes.utils.colors.violet,
+            primary_hue=gr.themes.utils.colors.green,
             # neutral_hue=gr.themes.utils.colors.gray,
             neutral_hue=gr.themes.utils.colors.zinc,
             font=["sans-serif", "Microsoft YaHei", "ui-sans-serif", "system-ui",
@@ -106,11 +106,16 @@ def adjust_theme():
 
 advanced_css = """
 
+
+.logo {
+    width: 100px;
+    height: 20px;
+}
+
 .btn-disabled {
     background-color: var(--background-color-secondary);
     disbabled: true;
 }
-
 
 footer {
     visibility: hidden;

@@ -55,13 +55,7 @@ def get_crazy_functions():
         "读Tex论文写摘要": {
             "Color": "stop",    # 按钮颜色
             "Function": HotReload(读文章写摘要)
-        },
-        "Markdown/Readme英译中": {
-            # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
-            "Color": "stop",
-            "AdvancedArgs": True, # 调用时，唤起高级参数输入区（默认False）
-            "Function": HotReload(Markdown英译中)
-        },
+        }
     }
     ###################### 第二组插件 ###########################
     # [第二组插件]: 经过充分测试
@@ -146,6 +140,45 @@ def get_crazy_functions():
             # "AsButton": False,  # 加入下拉菜单中
             "Function": HotReload(下载arxiv论文并翻译摘要)
         }
+    })
+
+    function_plugins.update({
+        "生成教案": {
+            # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
+            "Color": "stop",
+            # "AsButton": False,  # 加入下拉菜单中
+            "Function": HotReload(Latex英译中)
+        },
+        "模拟考题": {
+            # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
+            "Color": "stop",
+            # "AsButton": False,  # 加入下拉菜单中
+            "Function": HotReload(Latex英译中)
+        },
+        "一键阅卷": {
+            # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
+            "Color": "stop",
+            # "AsButton": False,  # 加入下拉菜单中
+            "Function": HotReload(Latex英译中)
+        },
+        "论文大纲": {
+            # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
+            "Color": "stop",
+            # "AsButton": False,  # 加入下拉菜单中
+            "Function": HotReload(Latex英译中)
+        },
+        "推荐参考文献": {
+            # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
+            "Color": "stop",
+            # "AsButton": False,  # 加入下拉菜单中
+            "Function": HotReload(Latex英译中)
+        },
+        "写作建议": {
+            # HotReload 的意思是热更新，修改函数插件代码后，不需要重启程序，代码直接生效
+            "Color": "stop",
+            # "AsButton": False,  # 加入下拉菜单中
+            "Function": HotReload(Latex英译中)
+        },
     })
 
     from crazy_functions.联网的ChatGPT import 连接网络回答问题

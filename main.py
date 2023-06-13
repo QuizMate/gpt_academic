@@ -11,14 +11,16 @@ def main():
         get_conf('proxies', 'WEB_PORT', 'LLM_MODEL', 'CONCURRENT_COUNT', 'AUTHENTICATION', 'CHATBOT_HEIGHT', 'LAYOUT', 'API_KEY', 'AVAIL_LLM_MODELS')
 
     # 如果WEB_PORT是-1, 则随机选取WEB端口
-    # PORT = find_free_port() if WEB_PORT <= 0 else WEB_PORT
-    PORT = 43676
+    PORT = 43678 if WEB_PORT <= 0 else WEB_PORT
+    
     if not AUTHENTICATION: AUTHENTICATION = None
 
     # from check_proxy import get_current_version
-    initial_prompt = "Serve me as a writing and programming assistant."
+    # initial_prompt = "收到信息只需要回复OK即可，如果需要修改请回复修改+内容，如修改论文题目为：修改论文题目+论文题目内容"
+    initial_prompt = "我希望你现在扮演一名论文辅导员，我将提供论文的标题，请帮我生成一篇500词的论文，其中应包括Title，Abstract，Introduction，Method，Result，Discussion，Conclusion，Reference，等标准的论文格式，段落之间应该有空行， 段落标题与正文应保留格式，请帮英文"
     # title_html = f"<h1 align=\"center\">ChatGPT 学术优化 {get_current_version()}</h1>"
-    title_html = f"<h1 align=\"center\"> Paper Dashi </h1>"
+
+    title_html = f"<h1 align=\"center\"> 荃程AI论文 </h1>"
     description =  """"""
 
     # 问询记录, python 版本建议3.9+（越新越好）
@@ -55,19 +57,23 @@ def main():
         CHATBOT_HEIGHT /= 2
 
     cancel_handles = []
-    with gr.Blocks(title="Paper Dashi", theme=set_theme, analytics_enabled=False, css=advanced_css) as demo:
+    with gr.Blocks(title="荃程AI论文", theme=set_theme, analytics_enabled=False, css=advanced_css) as demo:
+        # gr.Image("docs/logo.svg", variant="logo")
         gr.HTML(title_html)
         cookies = gr.State({'api_key': API_KEY, 'llm_model': LLM_MODEL})
         with gr_L1():
-           
+            with gr_L2(scale=2):
+                chatbot = gr.Chatbot(label=f"当前模型：{LLM_MODEL}", show_label=False)
+                chatbot.style(height=CHATBOT_HEIGHT)
+                history = gr.State([])
             with gr_L2(scale=1):
                 with gr.Accordion("文件上传", open=False) as area_file_up:
                     file_upload = gr.Files(label="推荐上传PDF, docx")
-                with gr.Accordion("Copilot", open=True) as area_input_primary:
+                with gr.Accordion("请输入论文题目", open=True) as area_input_primary:
                     with gr.Row():
-                        txt = gr.Textbox(show_label=False, placeholder="请在这里输入内容", lines=12).style(container=False)
+                        txt = gr.Textbox(show_label=False, placeholder="请在这里输入内容", lines=2).style(container=False)
                     with gr.Row():
-                        submitBtn = gr.Button("提交", variant="primary")
+                        submitBtn = gr.Button("生成一篇论文", variant="primary")
                     with gr.Row():
                         resetBtn = gr.Button("重置", variant="secondary"); resetBtn.style(size="sm")
                         stopBtn = gr.Button("停止", variant="secondary"); stopBtn.style(size="sm")
@@ -75,30 +81,40 @@ def main():
                     # with gr.Row():
                     #     status = gr.Markdown(f"Tip: 按Enter提交, 按Shift+Enter换行。当前模型: {LLM_MODEL} \n {proxy_info}")
                 with gr.Tab("基础功能"):
-                    with gr.Accordion("免费区", open=True) as area_basic_fn:
+                    with gr.Accordion("论文扩写", open=True) as area_basic_fn:
                         with gr.Row():
                             for k in functional:
-                                if ("Visible" in functional[k]) and (not functional[k]["Visible"]): continue
+                                if ("Expand" not in functional[k]): continue
                                 variant = functional[k]["Color"] if "Color" in functional[k] else "secondary"
                                 functional[k]["Button"] = gr.Button(k, variant=variant)
-                    with gr.Accordion("会员免费(限免", open=True) as area_basic_fn:
+                    with gr.Accordion("润色", open=True) as area_basic_fn1:
+                        with gr.Row():
+                            for k in functional:
+                                if ("Polishing" not in functional[k]): continue
+                                variant = functional[k]["Color"] if "Color" in functional[k] else "secondary"
+                                functional[k]["Button"] = gr.Button(k, variant=variant)
+                    with gr.Accordion("论文工具", open=True) as area_basic_fn2:
                         with gr.Row():
                             btnQueryAI = gr.Button(value="查AI")
                             btnVoidAi = gr.Button(value="降AI", elem_classes="btn btn-danger")
-                            btnReWriteAi = gr.Button(value="论文润色", elem_classes="btn btn-danger")
-                with gr.Tab("高级功能(待开发)"):
+                            gr.Button(value="查重")
+                            btnReWriteAi = gr.Button(value="降重", elem_classes="btn btn-danger")
+                    with gr.Accordion("导师", open=True) as area_basic_fn3:
+                        with gr.Row():
+                            gr.Button(value="导师润色")
+                with gr.Tab("高级功能"):
                     with gr.Row():
                         for k in crazy_fns:
                             if not crazy_fns[k].get("AsButton", True): continue
                             variant = crazy_fns[k]["Color"] if "Color" in crazy_fns[k] else "secondary"
-                            crazy_fns[k]["Button"] = gr.Button(k, elem_classes="btn btn-disabled")
-                            crazy_fns[k]["Button"].style(size="sm")
+                            crazy_fns[k]["Button"] = gr.Button(k, elem_classes="btn btn-disabled", disabled=True)
+                            # crazy_fns[k]["Button"].style(size="sm")
                     with gr.Row():
                         dropdown_fn_list = [k for k in crazy_fns.keys() if not crazy_fns[k].get("AsButton", True)]
                         for k  in dropdown_fn_list:
                             if not crazy_fns[k].get("AsButton", True): continue
                             variant = crazy_fns[k]["Color"] if "Color" in crazy_fns[k] else "secondary"
-                            crazy_fns[k]["Button"] = gr.Button(k, variant=variant)
+                            crazy_fns[k]["Button"] = gr.Button(k, variant=variant, disabled=True, elem_classes="btn btn-disabled")
                         plugin_advanced_arg = gr.Textbox(show_label=True, label="高级参数输入区", visible=False, 
                                                                  placeholder="这里是特殊函数插件的高级参数输入区").style(container=False)
                     # with gr.Row():
@@ -122,10 +138,7 @@ def main():
                         resetBtn2 = gr.Button("重置", variant="secondary"); resetBtn2.style(size="sm")
                         stopBtn2 = gr.Button("停止", variant="secondary"); stopBtn2.style(size="sm")
                         clearBtn2 = gr.Button("清除", variant="secondary", visible=False); clearBtn2.style(size="sm")
-            with gr_L2(scale=2):
-                chatbot = gr.Chatbot(label=f"当前模型：{LLM_MODEL}")
-                chatbot.style(height=CHATBOT_HEIGHT)
-                history = gr.State([])
+            
         # 功能区显示开关与功能区的互动
         def fn_area_visibility(a):
             ret = {}
@@ -157,7 +170,7 @@ def main():
         btnReWriteAi.click(fn=ai_rewrite, inputs=[cookies, txt, txt2, chatbot, history], outputs=output_combo)
         # 基础功能区的回调函数注册
         for k in functional:
-            if ("Visible" in functional[k]) and (not functional[k]["Visible"]): continue
+            if ("Polishing" not in functional[k]) and ("Expand" not in functional[k]): continue
             click_handle = functional[k]["Button"].click(fn=ArgsGeneralWrapper(predict), inputs=[*input_combo, gr.State(True), gr.State(k)], outputs=output_combo)
             cancel_handles.append(click_handle)
 
@@ -166,7 +179,7 @@ def main():
         # 函数插件-固定按钮区
         for k in crazy_fns:
             if not crazy_fns[k].get("AsButton", True): continue
-            # click_handle = crazy_fns[k]["Button"].click(ArgsGeneralWrapper(crazy_fns[k]["Function"]), [*input_combo, gr.State(PORT)], output_combo)
+            click_handle = crazy_fns[k]["Button"].click(ArgsGeneralWrapper(crazy_fns[k]["Function"]), [*input_combo, gr.State(PORT)], output_combo)
             click_handle.then(on_report_generated, [file_upload, chatbot], [file_upload, chatbot])
             cancel_handles.append(click_handle)
         # 函数插件-下拉菜单与随变按钮的互动
@@ -211,7 +224,7 @@ def main():
     auto_opentab_delay()
     demo.queue(concurrency_count=CONCURRENT_COUNT).launch(
         server_name="0.0.0.0", server_port=PORT,
-        # favicon_path="docs/logo.png", auth=AUTHENTICATION,
+        favicon_path="docs/logo.svg", auth=AUTHENTICATION,
         blocked_paths=["config.py","config_private.py","docker-compose.yml","Dockerfile"])
 
     # 如果需要在二级路径下运行

@@ -116,7 +116,6 @@ def predict(inputs, llm_kwargs, plugin_kwargs, chatbot, history=[], system_promp
     chatbot 为WebUI中显示的对话列表，修改它，然后yeild出去，可以直接修改对话界面内容
     additional_fn代表点击的哪个按钮，按钮见functional.py
     """
-
     origin_text = inputs
     if is_any_api_key(inputs):
         chatbot._cookies['api_key'] = inputs
@@ -233,6 +232,9 @@ def generate_payload(inputs, llm_kwargs, history, system_prompt, stream):
     """
     整合所有信息，选择LLM模型，生成http请求，为发送请求做准备
     """
+
+    print("generate_payload")
+    print(system_prompt, end="generate_payload\n")
     if not is_any_api_key(llm_kwargs['api_key']):
         raise AssertionError("你提供了错误的API_KEY。\n\n1. 临时解决方案：直接在输入区键入api_key，然后回车提交。\n\n2. 长效解决方案：在config.py中配置。")
 
